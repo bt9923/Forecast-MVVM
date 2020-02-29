@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.forecastmvvm.Data.network.ApixuWeatherApiService
@@ -69,8 +71,41 @@ class CurrentWeatherFragment : ScopedFragment(), KodeinAware {
         val currentWeather = viewModel.weather.await()
         currentWeather.observe(this@CurrentWeatherFragment, Observer {
             if (it == null) return@Observer
-            textView.text = it.toString()
+
+            group_loading.visibility = GONE
+
+            updateLocation("Pereira")
+            updateDateToToday()
         })
     }
 
+    private fun updateLocation(location: String){
+        (activity as AppCompatActivity).supportActionBar?.title = location
+    }
+
+    private fun updateDateToToday(){
+        (activity as AppCompatActivity).supportActionBar?.subtitle = "Today"
+    }
+
+    private fun updateTemperature(temperature: Double, feelsLike : Double){
+        val unitAbbreviation = "°C"
+        textView_temperature.text = "$temperature$unitAbbreviation"
+        textView_feels_like_temperature.text = "Feels like $feelsLike$unitAbbreviation"
+    }
+
+    private fun updateCondition(condition: String){
+        textView_condition.text = condition
+    }
+
+    private fun updatePrecipitation(precipitationVolume: Double){
+        textView_precipitation.text = "Precipitation: $precipitationVolume"
+    }
+
+    private fun updateWind(windDirection: String, winSpeed: String){
+        textView_condition.text = condition
+    }
+
+    private fun updatePrecipitation(precipitationVolume: Double){
+        textView_precipitation.text = "Precipitation: $precipitationVolume"
+    }
 }
